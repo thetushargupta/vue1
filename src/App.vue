@@ -3,10 +3,15 @@ import { ref, shallowRef, computed, watch, nextTick } from "vue";
 import Chart from "chart.js/auto";
 
 //refs
+//here weights is an array of object in which we are storing weight and the time when weight is recorded
 const weights = ref([]);
+// weight input is used to capture input value
+const weightInput = ref(0);
+
 const weightChartEl = ref(null);
 const weightChart = shallowRef(null);
-const weightInput = ref(0);
+
+// use of computed function
 const currentWeight = computed(() => {
   return weights.value.sort((a, b) => b.date - a.date)[0] || { weight: 0 };
 });
@@ -51,7 +56,7 @@ watch(
                 .map((weight) => weight.weight),
               backgroundColor: "rgba(255, 105, 180, 0.2)",
               borderColor: "rgba(255, 105, 180, 1)",
-              borderWidth: 1,
+              borderWidth: 3,
               fill: true,
             },
           ],
@@ -76,13 +81,13 @@ watch(
       <small>Current Weight (kg)</small>
     </div>
 
-    <form @submit.prevent="addWeight">
-      <input type="number" step="0.1" v-model="weightInput" />
+    <form @submit.prevent="addWeight" class="w-11/12 mx-auto">
+      <input class="w-10/12" type="number" step="0.1" v-model="weightInput" />
 
       <input type="submit" value="Add weight" />
     </form>
 
-    <div v-if="weights && weights.length > 0">
+    <div v-if="weights && weights.length > 0" class="mx-auto w-11/12">
       <h2>Last 7 days</h2>
 
       <div class="canvas-box">
@@ -92,10 +97,10 @@ watch(
       <div class="weight-history">
         <h2>Weight History</h2>
         <ul>
-          <li v-for="weight in weights">
-            <span>{{ weight.weight }}kg</span>
+          <li v-for="data in weights">
+            <span>{{ data.weight }}kg</span>
             <small>
-              {{ new Date(weight.date).toLocaleDateString() }}
+              {{ new Date(data.date).toLocaleDateString() }}
             </small>
           </li>
         </ul>
