@@ -1,14 +1,16 @@
-<script setup>
+<script setup lang="ts">
 import { ref, shallowRef, computed, watch, nextTick } from "vue";
 import Chart from "chart.js/auto";
 
 //refs
-const weights = ref([]);
-const weightChartEl = ref(null);
-const weightChart = shallowRef(null);
-const weightInput = ref(0);
+const weights = ref<any>([]);
+const weightChartEl = ref<any>(null);
+const weightChart = shallowRef<any>(null);
+const weightInput = ref<number>(0);
 const currentWeight = computed(() => {
-  return weights.value.sort((a, b) => b.date - a.date)[0] || { weight: 0 };
+  return (
+    weights.value.sort((a: any, b: any) => b.date - a.date)[0] || { weight: 0 }
+  );
 });
 
 // add weight function
@@ -23,15 +25,15 @@ const addWeight = () => {
 watch(
   weights,
   (newWeights) => {
-    const ws = [...newWeights];
+    const ws: any = [...newWeights]<any, false>;
     if (weightChart.value) {
       weightChart.value.data.labels = ws
-        .sort((a, b) => a.date - b.date)
-        .map((weight) => new Date(weight.date).toLocaleDateString())
+        .sort((a: any, b: any) => a.date - b.date)
+        .map((weight: any) => new Date(weight.date).toLocaleDateString())
         .slice(-7);
       weightChart.value.data.datasets[0].data = ws
-        .sort((a, b) => a.date - b.date)
-        .map((weight) => weight.weight)
+        .sort((a: any, b: any) => a.date - b.date)
+        .map((weight: any) => weight.weight)
         .slice(-7);
       weightChart.value.update();
       return;
@@ -41,14 +43,14 @@ watch(
         type: "line",
         data: {
           labels: ws
-            .sort((a, b) => a.date - b.date)
-            .map((weight) => new Date(weight.date).toLocaleDateString()),
+            .sort((a: any, b: any) => a.date - b.date)
+            .map((weight: any) => new Date(weight.date).toLocaleDateString()),
           datasets: [
             {
               label: "Weight",
               data: ws
-                .sort((a, b) => a.date - b.date)
-                .map((weight) => weight.weight),
+                .sort((a: any, b: any) => a.date - b.date)
+                .map((weight: any) => weight.weight),
               backgroundColor: "rgba(255, 105, 180, 0.2)",
               borderColor: "rgba(255, 105, 180, 1)",
               borderWidth: 1,
@@ -77,7 +79,7 @@ watch(
     </div>
 
     <form @submit.prevent="addWeight">
-      <input type="number" step="0.1" v-model="weightInput" />
+      <input class="w-11/12" type="number" step="0.1" v-model="weightInput" />
 
       <input type="submit" value="Add weight" />
     </form>
